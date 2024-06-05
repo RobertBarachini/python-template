@@ -1,0 +1,23 @@
+name: python-template
+channels:
+  - conda-forge
+  - defaults
+  - plotly
+dependencies:
+  # Specify python version
+  - python=3.12.3
+  # pip
+  - pip
+  # Formatting
+  - yapf
+  # Jupyter notebook
+  - nbformat
+  - nbstripout
+  - ipykernel
+  # Some common packages
+  - pandas
+  - numpy
+  - plotly
+  # pip packages - uncomment if needed (if a package is not available in other channels)
+  # - pip:
+  #     - opencv-contrib-python

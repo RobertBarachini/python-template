@@ -1,0 +1,9 @@
+# Local folder
+.private
+
+# Secrets
+.env
+
+# Extensions
+*.pyc
+*.log
