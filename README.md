@@ -41,3 +41,17 @@ To make sure you don't commit the Jupyter Notebook outputs, execution count, and
 # Run in the root of the repository
 nbstripout --install --attributes .gitattributes
 ```
+
+# Docker development
+
+TODO: Add detailed instructions and docker-compose files for dev and sample for prod (volumes for logs and such, debugpy with dev container, ...).
+
+Here's a simple example using just the `docker build` and `docker run` commands:
+
+```bash
+# NOTE: make sure you are in project root when running these commands
+# Build the image
+docker build -f Docker/Dockerfile --no-cache --target development -t python-template-development .
+# Run the image
+docker run --rm --name python-template-development python-template-development
+```

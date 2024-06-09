@@ -1,3 +1,7 @@
+# NOTE: Put "# <dev>" at the end of the line to specify that the package
+#       is only needed for development and can be stripped out before running
+#       CI for production images.
+
 name: python-template
 channels:
   - conda-forge
@@ -9,11 +13,11 @@ dependencies:
   # pip
   - pip
   # Formatting
-  - yapf
+  - yapf # <dev>
   # Jupyter notebook
-  - nbformat
-  - nbstripout
-  - ipykernel
+  - nbformat # <dev>
+  - nbstripout # <dev>
+  - ipykernel # <dev>
   # Some common packages
   - pandas
   - numpy
