@@ -24,6 +24,7 @@ dependencies:
   - pandas
   - numpy
   - plotly
+  - python-dotenv
   # pip packages - uncomment if needed (if a package is not available in other channels)
   # - pip:
   #     - opencv-contrib-python
