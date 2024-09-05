@@ -65,7 +65,10 @@ ENV PYTHON_ENV=development
 
 USER $MAMBA_USER
 
-CMD python src/sample.py
+EXPOSE 5678
+
+# CMD python src/sample.py
+CMD python -m debugpy --listen 0.0.0.0:5678 --wait-for-client src/sample.py
 
 ################################################################
 #  STAGE: ⚙️ Run production

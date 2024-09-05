@@ -13,6 +13,23 @@
 			"justMyCode": true
 		},
 		{
+			"name": "Docker: Remote Attach",
+			"type": "debugpy",
+			"request": "attach",
+			"connect": {
+				"host": "localhost",
+				"port": 5678
+			},
+			"pathMappings": [
+				{
+					"localRoot": "${workspaceFolder}",
+					"remoteRoot": "/usr/src/app"
+				}
+			],
+			"justMyCode": true,
+			"preLaunchTask": "docker-build-and-run",
+		},
+		{
 			"type": "bashdb",
 			"request": "launch",
 			"name": "Bash-Debug (simple config)",

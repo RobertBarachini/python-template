@@ -12,6 +12,8 @@ dependencies:
   - python=3.12.3
   # pip
   - pip
+  # Debugging
+  - debugpy # <dev>
   # Formatting
   - yapf # <dev>
   # Jupyter notebook
