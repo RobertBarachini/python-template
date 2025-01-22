@@ -7,22 +7,42 @@ from typing import Optional
 def get_logger(options: dict) -> logging.Logger:
 	if "filepath" not in options:
 		raise Exception("Missing filepath in options")
+
 	if not os.path.exists(os.path.dirname(options["filepath"])):
 		os.makedirs(os.path.dirname(options["filepath"]))
+
+	# Return the logger if it already exists to prevent duplicate handlers
+	if logging.getLogger(options["filepath"]).hasHandlers():
+		return logging.getLogger(options["filepath"])
+
 	if "level" not in options:
 		options["level"] = "INFO"
+
 	if "formatter" not in options:
 		options["formatter"] = logging.Formatter(
 		    '%(asctime)s.%(msecs)03d %(levelname)-8s %(message)s',
 		    datefmt='%Y-%m-%d %H:%M:%S')
+
 	handler = logging.FileHandler(options["filepath"],
 	                              mode="a+",
 	                              encoding="utf-8")
 	handler.setFormatter(options["formatter"])
+
+	console_handler = logging.StreamHandler()
+	console_handler.setFormatter(options["formatter"])
+
 	logger = logging.getLogger(options["filepath"])
+	logger.propagate = False
 	logger.setLevel(options["level"])
-	logger.addHandler(handler)
-	logger.info("=============================================================")
+
+	if not logger.hasHandlers():
+		logger.addHandler(handler)
+		logger.addHandler(console_handler)
+
+	options["fmt"] = options["formatter"]._fmt
+	options["datefmt"] = options["formatter"].datefmt
+
+	logger.info("=" * 60)
 	logger.info(
 	    f"Starting logger with options: {json.dumps(options, indent=2, sort_keys=True, default=str)}"
 	)
@@ -54,7 +74,6 @@ def say(message: str, logger: logging.Logger, level: Optional[str] = "INFO"):
 		logger.critical(message)
 	else:
 		logger.info(message)
-	print(message, flush=True)
 
 
 def test_get_logger():
@@ -148,6 +167,15 @@ def test_Logger():
 	logger.warning("(LOGGER 3) WARNING message 1")
 	logger.error("(LOGGER 3) ERROR message 1")
 	logger.critical("(LOGGER 3) CRITICAL message 1")
+	logger.info("")
+	logger2 = Logger({"filepath": "logs/test.log", "level": "DEBUG"})
+	logger2.say("(LOGGER 4) Testing reusing logger")
+	red_text_start = "\033[91m"
+	reset_text = "\033[0m"
+	logger2.say(
+	    f"{red_text_start}(LOGGER 4) This message should be red{reset_text}",
+	    "ERROR")
+	logger.say("(LOGGER 3) INFO message 2")
 
 
 if __name__ == "__main__":
