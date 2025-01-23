@@ -4,6 +4,24 @@ import json
 from typing import Optional
 
 
+# Terminal colors
+class TC:
+	# Colors
+	RED = "\033[91m"
+	GREEN = "\033[92m"
+	YELLOW = "\033[93m"
+	BLUE = "\033[94m"
+	CYAN = "\033[96m"
+	MAGENTA = "\033[95m"
+	# Aliases
+	RESET = "\033[0m"
+	INFO = RESET
+	DEBUG = CYAN
+	WARNING = YELLOW
+	ERROR = RED
+	CRITICAL = MAGENTA
+
+
 def get_logger(options: dict) -> logging.Logger:
 	if "filepath" not in options:
 		raise Exception("Missing filepath in options")
@@ -20,8 +38,7 @@ def get_logger(options: dict) -> logging.Logger:
 
 	if "formatter" not in options:
 		options["formatter"] = logging.Formatter(
-		    '%(asctime)s.%(msecs)03d %(levelname)-8s %(message)s',
-		    datefmt='%Y-%m-%d %H:%M:%S')
+		    '%(asctime)s.%(msecs)03d %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
 	handler = logging.FileHandler(options["filepath"],
 	                              mode="a+",
@@ -62,18 +79,26 @@ def say(message: str, logger: logging.Logger, level: Optional[str] = "INFO"):
 	if level is None:
 		level = "INFO"
 	level = level.upper()
-	if level == "INFO":
-		logger.info(message)
-	elif level == "DEBUG":
-		logger.debug(message)
-	elif level == "WARNING":
-		logger.warning(message)
-	elif level == "ERROR":
-		logger.error(message)
-	elif level == "CRITICAL":
-		logger.critical(message)
-	else:
-		logger.info(message)
+
+	log_methods = {
+	    "INFO": logger.info,
+	    "DEBUG": logger.debug,
+	    "WARNING": logger.warning,
+	    "ERROR": logger.error,
+	    "CRITICAL": logger.critical,
+	}
+
+	log_colors = {
+	    "INFO": TC.INFO,
+	    "DEBUG": TC.DEBUG,
+	    "WARNING": TC.WARNING,
+	    "ERROR": TC.ERROR,
+	    "CRITICAL": TC.CRITICAL,
+	}
+
+	color = log_colors.get(level, TC.INFO)
+	log_method = log_methods.get(level, logger.info)
+	log_method(f" {color}{level.rjust(8)}{TC.RESET}  {message}")
 
 
 def test_get_logger():
